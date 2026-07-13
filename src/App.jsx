@@ -24,8 +24,6 @@ const ImageContainer = () => {
         <Header/>
         <ImageTransformer
           name={name} 
-          list={list} 
-          getViewEndPoint={getViewEndPoint}
         />
         <Footer/>
     </div>

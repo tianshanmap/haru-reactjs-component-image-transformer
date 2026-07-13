@@ -14,10 +14,11 @@ import Sketch from "./components/sketch";
 import Flip from "./components/flip";
 import Grey from "./components/grey";
 import Blur from "./components/blur";
+import Stylization from "./components/stylization";
 
-export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
-  const totalButtons = 15;
-  const [remoteUrl,setRemoteUrl] = useState(getViewEndPoint(name));
+export function ImageTransformer({name,onExit}){
+  const totalButtons = 16;
+  const [remoteUrl,setRemoteUrl] = useState(api.getViewEndPoint(name));
   const [isImageContainer,setIsImageContainer] = useState(true);
   const [flags,setFlags] = useState(
     {
@@ -34,6 +35,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
       isFlipOpen: false,
       isGreyOpen: false,
       isBlurOpen: false,
+      isStyleOpen: false,
     }
   );
   const performDisable = (id,value) => {
@@ -74,6 +76,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
       }
     );
     disableButton(event.target.getAttribute("id"));
@@ -95,6 +98,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
     }
     );
     disableButton(event.target.getAttribute("id"));
@@ -116,6 +120,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
     }
     );
     disableButton(event.target.getAttribute("id"));
@@ -137,6 +142,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
    }
    );
     disableButton(event.target.getAttribute("id"));
@@ -158,6 +164,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -180,6 +187,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -201,6 +209,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
    }
     );
     disableButton(event.target.getAttribute("id"));
@@ -222,7 +231,8 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
-     }
+        isStyleOpen: false,
+    }
     );
     disableButton(event.target.getAttribute("id"));
     setIsImageContainer(false);
@@ -244,6 +254,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
    }
     );
     disableButton(event.target.getAttribute("id"));
@@ -266,6 +277,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -288,6 +300,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: true,
         isGreyOpen: false,
         isBlurOpen: false,
+        isStyleOpen: false,
    }
     );
     disableButton(event.target.getAttribute("id"));
@@ -310,6 +323,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: true,
         isBlurOpen: false,
+        isStyleOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -332,6 +346,29 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isFlipOpen: false,
         isGreyOpen: false,
         isBlurOpen: true,
+        isStyleOpen: false,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
+  };
+  const handleStyle = async (event) => {
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+        isGreyOpen: false,
+        isBlurOpen: false,
+        isStyleOpen: true,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -468,6 +505,16 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
     setIsImageContainer(true);
     enableButton();
   }
+  const handleStyleExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isStyleOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
 
   return (
     <div className={styles.image_block_container}>
@@ -488,6 +535,7 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
             <button id="13" className={styles.action_btn} onClick={handleDetailEnhance}>Detail Enhance</button>
             <button id="14" className={styles.action_btn} onClick={handleEdgePreserving}>Edge Preserving</button>
             <button id="15" className={styles.action_btn} onClick={handleSketch}>Sketch</button>
+            <button id="16" className={styles.action_btn} onClick={handleStyle}>Stylization</button>
         </div>
         <div className={styles.image_cmd}>
             {flags.isRotationOpen &&
@@ -528,6 +576,9 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
             }
             {flags.isBlurOpen &&
               <Blur name={name} url={remoteUrl} onExit={handleBlurExit}></Blur>
+            }
+            {flags.isStyleOpen &&
+              <Stylization name={name} url={remoteUrl} onExit={handleStyleExit}></Stylization>
             }
         </div>
       </div>
