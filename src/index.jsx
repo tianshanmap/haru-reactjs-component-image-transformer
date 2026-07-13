@@ -32,16 +32,19 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
       isFlipOpen: false,
     }
   );
+  const performDisable = (id,value) => {
+    document.getElementById(id + "").disabled = value;
+  }
   const disableButton = (id) => {
     const current_index = parseInt(id);
-    for (let i = 1; i <= totalButtons; i++) {
+    for (let i = 3; i <= totalButtons; i++) {
       if (i != current_index)
-        document.getElementById(i + "").disabled = true;
+        performDisable(i,true)
     }  
   }
   const enableButton = () => {
     for (let i = 1; i <= totalButtons; i++) {
-      document.getElementById(i + "").disabled = false;
+      performDisable(i,false);
     }  
   }
 
