@@ -12,6 +12,8 @@ import GaussinBlur from "./components/gaussin_blur";
 import Rotation from "./components/rotation";
 import Sketch from "./components/sketch";
 import Flip from "./components/flip";
+import Grey from "./components/grey";
+import Blur from "./components/blur";
 
 export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
   const totalButtons = 15;
@@ -30,6 +32,8 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
       isEdgePreservingOpen: false,
       isSketchOpen: false,
       isFlipOpen: false,
+      isGreyOpen: false,
+      isBlurOpen: false,
     }
   );
   const performDisable = (id,value) => {
@@ -68,6 +72,8 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: false,
         isFlipOpen: false,
+        isGreyOpen: false,
+        isBlurOpen: false,
       }
     );
     disableButton(event.target.getAttribute("id"));
@@ -87,6 +93,8 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: false,
         isFlipOpen: false,
+        isGreyOpen: false,
+        isBlurOpen: false,
     }
     );
     disableButton(event.target.getAttribute("id"));
@@ -106,6 +114,8 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: false,
         isFlipOpen: false,
+        isGreyOpen: false,
+        isBlurOpen: false,
     }
     );
     disableButton(event.target.getAttribute("id"));
@@ -125,7 +135,9 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: false,
         isFlipOpen: false,
-     }
+        isGreyOpen: false,
+        isBlurOpen: false,
+   }
    );
     disableButton(event.target.getAttribute("id"));
     setIsImageContainer(false);
@@ -144,6 +156,8 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: false,
         isFlipOpen: false,
+        isGreyOpen: false,
+        isBlurOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -164,7 +178,9 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: false,
         isFlipOpen: false,
-   }
+        isGreyOpen: false,
+        isBlurOpen: false,
+     }
     );
     disableButton(event.target.getAttribute("id"));
     setIsImageContainer(false);
@@ -183,7 +199,9 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: false,
         isFlipOpen: false,
-     }
+        isGreyOpen: false,
+        isBlurOpen: false,
+   }
     );
     disableButton(event.target.getAttribute("id"));
     setIsImageContainer(false);
@@ -202,6 +220,8 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: false,
         isFlipOpen: false,
+        isGreyOpen: false,
+        isBlurOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -222,7 +242,9 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: true,
         isSketchOpen: false,
         isFlipOpen: false,
-     }
+        isGreyOpen: false,
+        isBlurOpen: false,
+   }
     );
     disableButton(event.target.getAttribute("id"));
     setIsImageContainer(false);
@@ -242,6 +264,8 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: true,
         isFlipOpen: false,
+        isGreyOpen: false,
+        isBlurOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -262,19 +286,56 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGreenscaleOpen: false,
         isSketchOpen: false,
         isFlipOpen: true,
-     }
+        isGreyOpen: false,
+        isBlurOpen: false,
+   }
     );
     disableButton(event.target.getAttribute("id"));
     setIsImageContainer(false);
   };
 
   const handleGrey = async (event) => {
-    setRemoteUrl(api.transform_grey(name));
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+        isGreyOpen: true,
+        isBlurOpen: false,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
   };
 
   const handleBlur = async (event) => {
-    console.log("handleBlur..." + api.transform_blur(name))
-    setRemoteUrl(api.transform_blur(name));
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+        isGreyOpen: false,
+        isBlurOpen: true,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
   };
 
   const handleSketchExit = (event) => {
@@ -387,6 +448,26 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
     setIsImageContainer(true);
     enableButton();
   }
+  const handleGreyExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isGreyOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleBlurExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isBlurOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
 
   return (
     <div className={styles.image_block_container}>
@@ -441,6 +522,12 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
             }
             {flags.isFlipOpen &&
               <Flip name={name} url={remoteUrl} onExit={handleFlipExit}></Flip>
+            }
+            {flags.isGreyOpen &&
+              <Grey name={name} url={remoteUrl} onExit={handleGreyExit}></Grey>
+            }
+            {flags.isBlurOpen &&
+              <Blur name={name} url={remoteUrl} onExit={handleBlurExit}></Blur>
             }
         </div>
       </div>
