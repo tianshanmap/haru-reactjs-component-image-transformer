@@ -1,0 +1,31 @@
+.greyscale_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  /* box-shadow: 50px 50px 70px rgba(12, 0, 0, 0.9); */
+  gap:50px;
+  margin-bottom: 30px;
+  margin-left: 200px;
+}
+.greyscale_controller {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 50px 50px 70px rgba(12, 0, 0, 0.9);
+  border-radius: 20px;
+  width: 200px;
+}
+.greyscale_image {
+  background-color: white;
+  box-shadow: 50px 50px 70px rgba(12, 0, 0, 0.9);
+  border-radius: 20px;
+}
+.action_btn {
+  background-color: #8f969d;
+}
+.action_btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); /* Lifts the button up slightly */
+}

@@ -1,31 +1,56 @@
 import { useState } from "react";
 import styles from "./image_transformer.module.css";
 import api from "haru-service-api";
+import GreyScale from "./components/greyscale";
+import EdgePreserving from "./components/edge_preserving";
+import DetailEnhance from "./components/detail_enhance";
+import Contrast from "./components/contrast";
+import Normalize from "./components/normalize";
+import Bilateral from "./components/bilateral";
+import MedianBlur from "./components/median_blur";
+import GaussinBlur from "./components/gaussin_blur";
+import Rotation from "./components/rotation";
+import Sketch from "./components/sketch";
+import Flip from "./components/flip";
 
 export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
-  console.log("----ImageViewer------");
-
+  const totalButtons = 15;
+  const [remoteUrl,setRemoteUrl] = useState(getViewEndPoint(name));
+  const [isImageContainer,setIsImageContainer] = useState(true);
   const [flags,setFlags] = useState(
     {
       isRotationOpen: false,
       isGaussinBlurOpen: false,
       isMedianBlurOpen: false,
       isBilateralOpen: false,
+      isNormalizeOpen: false,
+      isContrastOpen: false,
+      isDetailEnhanceOpen: false,
+      isGreenscaleOpen: false,
+      isEdgePreservingOpen: false,
+      isSketchOpen: false,
+      isFlipOpen: false,
     }
   );
-  const [remoteUrl,setRemoteUrl] = useState(getViewEndPoint(name));
-  // const [isRotationOpen, setIsRotationOpen] = useState(false);
-  // const [isGaussinBlurOpen, setIsGaussinBlurOpen] = useState(false);
-  // const [isMedianBlurOpen, setIsMedianBlurOpen] = useState(false);
-  // const [isBilateralOpen, setIsBilateralOpen] = useState(false);
-  const [angle, setAngle] = useState(0);
-  const [sigmaX, setSigmaX] = useState(0);
-  const [sigmaY, setSigmaY] = useState(0);
-  const [ksize, setKsize] = useState(1);
-  const [diameter, setDiameter] = useState(5);
-  const [sigmaColor, setSigmaColor] = useState(5);
-  const [sigmaSpace, setSigmaSpace] = useState(5);
+  const disableButton = (id) => {
+    const current_index = parseInt(id);
+    for (let i = 1; i <= totalButtons; i++) {
+      if (i != current_index)
+        document.getElementById(i + "").disabled = true;
+    }  
+  }
+  const enableButton = () => {
+    for (let i = 1; i <= totalButtons; i++) {
+      document.getElementById(i + "").disabled = false;
+    }  
+  }
 
+  const handleScaleUp = async (event) => {
+    document.getElementById("img_container").width = document.getElementById("img_container").width + 100;
+  };
+  const handleScaleDown = async (event) => {
+    document.getElementById("img_container").width = document.getElementById("img_container").width - 100;
+  };
   const handleRotation = async (event) => {
     setFlags(
       {
@@ -33,64 +58,18 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGaussinBlurOpen: false,
         isMedianBlurOpen: false,
         isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
       }
     );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
   };
-  const handleRotationChange = (event) => {
-    console.log("handleRotationChange-angle=" + event.target.value);
-    setAngle(event.target.value);
-    setRemoteUrl(api.transform_rotation(name,event.target.value));
-  }
-
-  const handleSigmaXChange = (event) => {
-    console.log("handleSigmaXChange-sigmaX=" + event.target.value);
-    setSigmaX(event.target.value);
-    setRemoteUrl(api.transform_gaussinblur(name,event.target.value,sigmaY));
-  }
-  const handleSigmaYChange = (event) => {
-    console.log("handleSigmaYChange-sigmaY=" + event.target.value);
-    setSigmaY(event.target.value);
-    setRemoteUrl(api.transform_gaussinblur(name,sigmaX,event.target.value));
-  }
-  const handleKsizeChange = (event) => {
-    console.log("handleKsizeChange-ksize=" + event.target.value);
-    setKsize(event.target.value);
-    setRemoteUrl(api.transform_medianblur(name,event.target.value));
-  }
-  const handleDiameterChange = (event) => {
-    console.log("handleDiameterChange-d=" + event.target.value);
-    setDiameter(event.target.value);
-    setRemoteUrl(api.transform_bilateral(name,event.target.value,sigmaColor,sigmaSpace));
-  }
-  const handleSigmaColorChange = (event) => {
-    console.log("handleSigmaSpaceChange-sigmaColor=" + event.target.value);
-    setSigmaColor(event.target.value);
-    setRemoteUrl(api.transform_bilateral(name,diameter,event.target.value,sigmaSpace));
-  }
-  const handleSigmaSpaceChange = (event) => {
-    console.log("handleSigmaSpaceChange-sigmaSpace=" + event.target.value);
-    setSigmaSpace(event.target.value);
-    setRemoteUrl(api.transform_bilateral(name,diameter,sigmaColor,event.target.value));
-  }
-  const handleRotationSave = (event) => {
-    api.transform_rotation_save(name,angle);
-  }
-
-  const handleGrey = async (event) => {
-    setRemoteUrl(api.transform_grey(name));
-  };
-  const handleGreySave = async (event) => {
-    api.transform_grey_save(name);
-  };
-
-  const handleBlur = async (event) => {
-    console.log("handleBlur..." + api.transform_blur(name))
-    setRemoteUrl(api.transform_blur(name));
-  };
-  const handleBlurSave = async (event) => {
-    api.transform_blur_save(name);
-  };
-
   const handleGaussinBlur = async (event) => {
     setFlags(
       {
@@ -98,8 +77,17 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGaussinBlurOpen: true,
         isMedianBlurOpen: false,
         isBilateralOpen: false,
-      }
-    )
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+    }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
   };
   const handleMedianBlur = async (event) => {
     setFlags(
@@ -108,8 +96,17 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGaussinBlurOpen: false,
         isMedianBlurOpen: true,
         isBilateralOpen: false,
-      }
-    )
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+    }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
   };
   const handleBilateral = async (event) => {
     setFlags(
@@ -118,89 +115,337 @@ export function ImageTransformer({name,parent,list,onExit,getViewEndPoint}){
         isGaussinBlurOpen: false,
         isMedianBlurOpen: false,
         isBilateralOpen: true,
-      }
-    )
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+     }
+   );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
   };
-  const handleVerticalFlip = async (event) => {
-      setRemoteUrl(api.transform_flip(name,0));
-  };
-  const handleHorizentalFlip = async (event) => {
-      setRemoteUrl(api.transform_flip(name,1));
-  };
-  const handleGaussinBlurSave = async (event) => {
-    api.transform_gaussinblur_save(name);
+  const handleNormalize = async (event) => {
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: true,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
   };
 
-  const handleScaleUp = async (event) => {
-    document.getElementById("img_container").width = document.getElementById("img_container").width + 100;
+  const handleContrast = async (event) => {
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: true,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+   }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
   };
-  const handleScaleDown = async (event) => {
-    document.getElementById("img_container").width = document.getElementById("img_container").width - 100;
+  const handleDetailEnhance = async (event) => {
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: true,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
   };
+  const handleEdgePreserving = async (event) => {
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: true,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
+  };
+
+  const handleGreyscale = async (event) => {
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: true,
+        isSketchOpen: false,
+        isFlipOpen: false,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
+  };
+
+  const handleSketch = async (event) => {
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: true,
+        isFlipOpen: false,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
+  };
+
+  const handleFlip = async (event) => {
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: true,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
+  };
+
+  const handleGrey = async (event) => {
+    setRemoteUrl(api.transform_grey(name));
+  };
+
+  const handleBlur = async (event) => {
+    console.log("handleBlur..." + api.transform_blur(name))
+    setRemoteUrl(api.transform_blur(name));
+  };
+
+  const handleSketchExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isSketchOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleFlipExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isFlipOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleGreyScaleExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isGreenscaleOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleEdgeProcessingExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isEdgePreservingOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleDetailEnhanceExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isDetailEnhanceOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleContrastExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isContrastOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleNormalizeExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isNormalizeOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleBilateralExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isBilateralOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleMedianExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isMedianBlurOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleGaussinExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isGaussinBlurOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+  const handleRotationExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isRotationOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
+
   return (
     <div className={styles.image_block_container}>
       <div className={styles.image_cmd_container}>
         <div className={styles.image_cmd}>
-            <button className={styles.action_btn} onClick={handleScaleUp}>+</button>
-            <button className={styles.action_btn} onClick={handleScaleDown}>-</button>
-            <button className={styles.action_btn} onClick={handleRotation}>Rotation</button>
-            <button className={styles.action_btn} onClick={handleGrey}>Grey</button>
-            <button className={styles.action_btn} onClick={handleGreySave}>Save Grey</button>
-            <button className={styles.action_btn} onClick={handleBlur}>Blur</button>
-            <button className={styles.action_btn} onClick={handleBlurSave}>Save Blur</button>
-            <button className={styles.action_btn} onClick={handleGaussinBlur}>Gaussin Blur</button>
-            <button className={styles.action_btn} onClick={handleGaussinBlurSave}>Save Gaussin Blur</button>
-            <button className={styles.action_btn} onClick={handleMedianBlur}>Median Blur</button>
-            <button className={styles.action_btn} onClick={handleBilateral}>Bilateral</button>
-            <button className={styles.action_btn} onClick={handleVerticalFlip}>Vertical Flip</button>
-            <button className={styles.action_btn} onClick={handleHorizentalFlip}>Horizental Flip</button>
+            <button id="1" className={styles.action_btn} onClick={handleScaleUp}>+</button>
+            <button id="2" className={styles.action_btn} onClick={handleScaleDown}>-</button>
+            <button id="3" className={styles.action_btn} onClick={handleRotation}>Rotation</button>
+            <button id="4" className={styles.action_btn} onClick={handleGrey}>Grey</button>
+            <button id="5" className={styles.action_btn} onClick={handleGreyscale}>Grey Scale</button>
+            <button id="6" className={styles.action_btn} onClick={handleBlur}>Blur</button>
+            <button id="7" className={styles.action_btn} onClick={handleGaussinBlur}>Gaussin Blur</button>
+            <button id="8" className={styles.action_btn} onClick={handleMedianBlur}>Median Blur</button>
+            <button id="9" className={styles.action_btn} onClick={handleBilateral}>Bilateral</button>
+            <button id="10" className={styles.action_btn} onClick={handleFlip}>Flip</button>
+            <button id="11" className={styles.action_btn} onClick={handleNormalize}>Normalize</button>
+            <button id="12" className={styles.action_btn} onClick={handleContrast}>Contrast</button>
+            <button id="13" className={styles.action_btn} onClick={handleDetailEnhance}>Detail Enhance</button>
+            <button id="14" className={styles.action_btn} onClick={handleEdgePreserving}>Edge Preserving</button>
+            <button id="15" className={styles.action_btn} onClick={handleSketch}>Sketch</button>
         </div>
         <div className={styles.image_cmd}>
             {flags.isRotationOpen &&
-              <div class={styles.transform_rotation}>
-                <div>
-                  <label for="angle">Angle : </label>
-                  <input type="number" id="angle" name="quantity" min="1" max="180" step="1" onChange={handleRotationChange}></input>
-                  <button className={styles.action_btn} onClick={handleRotationSave}>Save</button>
-                </div>
-              </div>  
+              <Rotation name={name} url={remoteUrl} onExit={handleRotationExit}></Rotation>
             }
             {flags.isGaussinBlurOpen &&
-              <div class={styles.transform_rotation}>
-                <div>
-                  <label for="sigmaX">SimaX : </label>
-                  <input type="number" id="sigmaX" name="sigmaX" min="0" max="50" step="1" onChange={handleSigmaXChange}></input>
-                  <label for="sigmaY">SimaY : </label>
-                  <input type="number" id="sigmaY" name="sigmaY" min="0" max="50" step="1" onChange={handleSigmaYChange}></input>
-                  <button className={styles.action_btn} onClick={handleRotationSave}>Save</button>
-                </div>
-              </div>  
+              <GaussinBlur name={name} url={remoteUrl} onExit={handleGaussinExit}></GaussinBlur>
             }
             {flags.isMedianBlurOpen &&
-              <div class={styles.transform_rotation}>
-                <div>
-                  <label for="ksize">ksize : </label>
-                  <input type="number" id="ksize" name="ksize" min="1" max="11" step="2" onChange={handleKsizeChange}></input>
-                </div>
-              </div>  
+              <MedianBlur name={name} url={remoteUrl} onExit={handleMedianExit}></MedianBlur>
             }
             {flags.isBilateralOpen &&
-              <div class={styles.transform_rotation}>
-                <div>
-                  <label for="diameter">Diameter : </label>
-                  <input type="number" id="diameter" name="diameter" min="5" max="50" step="1" onChange={handleDiameterChange}></input>
-                  <label for="sigmaColor">Sigma Color : </label>
-                  <input type="number" id="sigmaColor" name="sigmaColor" min="10" max="100" step="1" onChange={handleSigmaColorChange}></input>
-                  <label for="sigmaSpace">Sigma Space : </label>
-                  <input type="number" id="sigmaSpace" name="sigmaSpace" min="10" max="100" step="1" onChange={handleSigmaSpaceChange}></input>
-                </div>
-              </div>  
+              <Bilateral name={name} url={remoteUrl} onExit={handleBilateralExit}></Bilateral>
+            }
+            {flags.isNormalizeOpen &&
+              <Normalize name={name} url={remoteUrl} onExit={handleNormalizeExit}></Normalize>
+            }
+            {flags.isContrastOpen &&
+              <Contrast name={name} url={remoteUrl} onExit={handleContrastExit}></Contrast>
+            }
+            {flags.isDetailEnhanceOpen &&
+              <DetailEnhance name={name} url={remoteUrl} onExit={handleDetailEnhanceExit}></DetailEnhance>
+            }
+            {flags.isEdgePreservingOpen &&
+              <EdgePreserving name={name} url={remoteUrl} onExit={handleEdgeProcessingExit}></EdgePreserving>
+            }
+            {flags.isGreenscaleOpen &&
+              <GreyScale name={name} url={remoteUrl} onExit={handleGreyScaleExit}></GreyScale>
+            }
+            {flags.isSketchOpen &&
+              <Sketch name={name} url={remoteUrl} onExit={handleSketchExit}></Sketch>
+            }
+            {flags.isFlipOpen &&
+              <Flip name={name} url={remoteUrl} onExit={handleFlipExit}></Flip>
             }
         </div>
       </div>
-      <div className={styles.image_container}>
-        <img id="img_container" className={styles.image} src={remoteUrl} width="500"></img>
-      </div>
+      {isImageContainer &&
+        <div className={styles.image_container}>
+          <img id="img_container" className={styles.image} src={remoteUrl} width="500"></img>
+        </div>
+      }
     </div>
   );
 }
