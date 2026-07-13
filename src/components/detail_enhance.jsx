@@ -18,6 +18,9 @@ const DetailEnhance = ({name,url,onExit}) => {
 
   return (
     <div class={styles.greyscale_container}>
+      <div class={styles.greyscale_image}>
+        <img id="img_container" src={remoteUrl} width="500"></img>
+      </div>
       <div class={styles.greyscale_controller}>
         <div>
             <label for="sigmaS">SigmaS : </label>
@@ -30,9 +33,6 @@ const DetailEnhance = ({name,url,onExit}) => {
         <div>
           <button className={styles.action_btn} onClick={onExit}>Exit</button>
         </div>
-      </div>
-      <div class={styles.greyscale_image}>
-        <img id="img_container" src={remoteUrl} width="500"></img>
       </div>
     </div>  
   );

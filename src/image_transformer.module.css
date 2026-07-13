@@ -55,3 +55,8 @@
 .transform_rotation {
   display: flex;
 }
+
+.transform_component {
+  diplay: flex;
+  justify-content: center;
+}

@@ -537,7 +537,7 @@ export function ImageTransformer({name,onExit}){
             <button id="15" className={styles.action_btn} onClick={handleSketch}>Sketch</button>
             <button id="16" className={styles.action_btn} onClick={handleStyle}>Stylization</button>
         </div>
-        <div className={styles.image_cmd}>
+        <div className={styles.transform_component}>
             {flags.isRotationOpen &&
               <Rotation name={name} url={remoteUrl} onExit={handleRotationExit}></Rotation>
             }
