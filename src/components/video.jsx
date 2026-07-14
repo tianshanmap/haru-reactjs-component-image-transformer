@@ -76,7 +76,7 @@ const VideoPlayer = ({onExit}) => {
   }
 
   return (
-    <>
+    <div className={styles.video_wrapper}>
       {isVideoListOpen &&
         <div className={styles.video_list_container}>
           <table className={styles.video_table}>
@@ -113,12 +113,12 @@ const VideoPlayer = ({onExit}) => {
             <div>
               <button className={styles.action_btn} onClick={handleCapture}>Capture</button>
               <button className={styles.action_btn} onClick={handleBack}>Back To List</button>
-              <button className={styles.action_btn} onClick={onExit}>Exit</button>
             </div>
           </div>
         </div>  
       }
-    </>
+      <button className={styles.action_btn} onClick={onExit}>Exit</button>
+    </div>
   );
 }
 
