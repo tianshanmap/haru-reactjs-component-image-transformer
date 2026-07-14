@@ -5,7 +5,7 @@ import ImageTransformer from './index.jsx'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const url = "http://tianshan.ca/filesystem";
-const name = "/Users/developer/T9/travels/processed/174-alison/jpeg/20251206_092438.jpeg";
+const name = "/Users/developer/T9/workshop/video-capture/capture/image_2026-07-14T15-21-03-867Z.jpeg";
 const list = [
   "/Users/developer/T9/travels/processed/174-alison/jpeg/20251130_225239.jpeg",
   "/Users/developer/T9/travels/processed/174-alison/jpeg/20251202_080503.jpeg",

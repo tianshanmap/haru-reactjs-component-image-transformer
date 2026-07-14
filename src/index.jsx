@@ -631,7 +631,7 @@ export function ImageTransformer({name,onExit}){
               <Stylization name={name} url={remoteUrl} onExit={handleStyleExit}></Stylization>
             }
             {flags.isVideoOpen &&
-              <VideoPlayer name={name} url={remoteUrl} onExit={handleVideoExit}></VideoPlayer>
+              <VideoPlayer onExit={handleVideoExit}></VideoPlayer>
             }
         </div>
       </div>
