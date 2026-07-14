@@ -15,6 +15,7 @@ import Flip from "./components/flip";
 import Grey from "./components/grey";
 import Blur from "./components/blur";
 import Stylization from "./components/stylization";
+import VideoPlayer from "./components/video";
 
 export function ImageTransformer({name,onExit}){
   const totalButtons = 16;
@@ -36,6 +37,7 @@ export function ImageTransformer({name,onExit}){
       isGreyOpen: false,
       isBlurOpen: false,
       isStyleOpen: false,
+      isVideoOpen: false,
     }
   );
   const performDisable = (id,value) => {
@@ -77,6 +79,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
       }
     );
     disableButton(event.target.getAttribute("id"));
@@ -99,6 +102,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
     }
     );
     disableButton(event.target.getAttribute("id"));
@@ -121,6 +125,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
     }
     );
     disableButton(event.target.getAttribute("id"));
@@ -143,6 +148,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
    }
    );
     disableButton(event.target.getAttribute("id"));
@@ -165,6 +171,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -188,6 +195,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -210,6 +218,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
    }
     );
     disableButton(event.target.getAttribute("id"));
@@ -232,6 +241,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
     }
     );
     disableButton(event.target.getAttribute("id"));
@@ -255,6 +265,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
    }
     );
     disableButton(event.target.getAttribute("id"));
@@ -278,6 +289,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -301,6 +313,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
    }
     );
     disableButton(event.target.getAttribute("id"));
@@ -324,6 +337,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: true,
         isBlurOpen: false,
         isStyleOpen: false,
+      isVideoOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -347,6 +361,7 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: true,
         isStyleOpen: false,
+      isVideoOpen: false,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -369,6 +384,30 @@ export function ImageTransformer({name,onExit}){
         isGreyOpen: false,
         isBlurOpen: false,
         isStyleOpen: true,
+      isVideoOpen: false,
+     }
+    );
+    disableButton(event.target.getAttribute("id"));
+    setIsImageContainer(false);
+  };
+  const handleVideo = async (event) => {
+    setFlags(
+      {
+        isRotationOpen: false,
+        isGaussinBlurOpen: false,
+        isMedianBlurOpen: false,
+        isBilateralOpen: false,
+        isNormalizeOpen: false,
+        isContrastOpen: false,
+        isDetailEnhanceOpen: false,
+        isEdgePreservingOpen: false,
+        isGreenscaleOpen: false,
+        isSketchOpen: false,
+        isFlipOpen: false,
+        isGreyOpen: false,
+        isBlurOpen: false,
+        isStyleOpen: false,
+        isVideoOpen: true,
      }
     );
     disableButton(event.target.getAttribute("id"));
@@ -515,6 +554,16 @@ export function ImageTransformer({name,onExit}){
     setIsImageContainer(true);
     enableButton();
   }
+  const handleVideoExit = (event) => {
+    setFlags(
+      {
+        ...flags,
+        isVideoOpen: false,
+     }
+    )
+    setIsImageContainer(true);
+    enableButton();
+  }
 
   return (
     <div className={styles.image_block_container}>
@@ -536,6 +585,7 @@ export function ImageTransformer({name,onExit}){
             <button id="14" className={styles.action_btn} onClick={handleEdgePreserving}>Edge Preserving</button>
             <button id="15" className={styles.action_btn} onClick={handleSketch}>Sketch</button>
             <button id="16" className={styles.action_btn} onClick={handleStyle}>Stylization</button>
+            <button id="17" className={styles.action_btn} onClick={handleVideo}>Video</button>
         </div>
         <div className={styles.transform_component}>
             {flags.isRotationOpen &&
@@ -579,6 +629,9 @@ export function ImageTransformer({name,onExit}){
             }
             {flags.isStyleOpen &&
               <Stylization name={name} url={remoteUrl} onExit={handleStyleExit}></Stylization>
+            }
+            {flags.isVideoOpen &&
+              <VideoPlayer name={name} url={remoteUrl} onExit={handleVideoExit}></VideoPlayer>
             }
         </div>
       </div>
